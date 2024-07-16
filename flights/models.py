@@ -22,8 +22,9 @@ class AirplaneType(models.Model):
 
 
 class Route(models.Model):
-    source = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="routes")
-    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="routes")
+    source = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="source_routes")
+    destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="destination_routes")
+    distance = models.IntegerField()
 
 
 class Airplane(models.Model):
@@ -45,4 +46,4 @@ class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="tickets")
-    order = models.ForeignKey(Order, on_delete=models, related_name="tickets")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="tickets")
