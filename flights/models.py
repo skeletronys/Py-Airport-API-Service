@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from AirportManagementSystem import settings
 
 
 class Crew(models.Model):
@@ -20,7 +20,7 @@ class Airport(models.Model):
 
 class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 
 class AirplaneType(models.Model):
