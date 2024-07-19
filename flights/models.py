@@ -22,6 +22,9 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.username
+
 
 class AirplaneType(models.Model):
     name = models.CharField(max_length=255)
@@ -55,6 +58,9 @@ class Flight(models.Model):
     departure_time = models.DateTimeField()
     arrival_time = models.DateTimeField()
     crew = models.ManyToManyField(Crew)
+
+    def __str__(self):
+        return f"{self.route.source.name} - {self.route.destination.name}"
 
 
 class Ticket(models.Model):
