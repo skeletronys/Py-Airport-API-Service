@@ -61,6 +61,13 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = "__all__"
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        created_at = instance.created_at
+        formatted_created_at = created_at.strftime("%H:%M:%S %d-%m-%Y")
+        representation['created_at'] = formatted_created_at
+        return representation
+
 
 class TicketSerializer(serializers.ModelSerializer):
 
