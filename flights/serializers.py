@@ -69,13 +69,6 @@ class OrderSerializer(serializers.ModelSerializer):
         return representation
 
 
-class TicketSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Ticket
-        fields = "__all__"
-
-
 class FlightSerializer(serializers.ModelSerializer):
     airplane = serializers.SlugRelatedField(
         queryset=Airplane.objects.all(),
@@ -99,3 +92,12 @@ class FlightSerializer(serializers.ModelSerializer):
         representation['crew'] = crew_data
 
         return representation
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    flight = FlightSerializer(read_only=True)
+    order = OrderSerializer(read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = "__all__"
