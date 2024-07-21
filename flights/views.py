@@ -27,7 +27,7 @@ class CrewListViewSet(viewsets.ModelViewSet):
 
 
 class RouteListViewSet(viewsets.ModelViewSet):
-    queryset = Route.objects.all()
+    queryset = Route.objects.select_related('source', 'destination').all()
     serializer_class = RouteSerializer
 
 
@@ -37,7 +37,7 @@ class AirportListViewSet(viewsets.ModelViewSet):
 
 
 class AirplaneListViewSet(viewsets.ModelViewSet):
-    queryset = Airplane.objects.all()
+    queryset = Airplane.objects.select_related('airplane_type').all()
     serializer_class = AirplaneSerializer
 
 
@@ -52,10 +52,10 @@ class OrderListViewSet(viewsets.ModelViewSet):
 
 
 class TicketListViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.all()
+    queryset = Ticket.objects.select_related('flight', 'order').all()
     serializer_class = TicketSerializer
 
 
 class FlightListViewSet(viewsets.ModelViewSet):
-    queryset = Flight.objects.all()
+    queryset = Flight.objects.select_related('route__source', 'route__destination', 'airplane__airplane_type').prefetch_related('crew').all()
     serializer_class = FlightSerializer
