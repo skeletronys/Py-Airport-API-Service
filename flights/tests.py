@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.utils.timezone import make_aware
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -134,7 +137,12 @@ class FlightTest(APITestCase):
         self.source = Airport.objects.create(name="Airport 1", closest_big_city="City 1")
         self.destination = Airport.objects.create(name="Airport 2", closest_big_city="City 2")
         self.route = Route.objects.create(source=self.source, destination=self.destination, distance=1000)
-        self.flight = Flight.objects.create(route=self.route, airplane=self.airplane, departure_time="2023-07-20T08:00:00Z", arrival_time="2023-07-20T10:00:00Z")
+        self.flight = Flight.objects.create(
+            route=self.route,
+            airplane=self.airplane,
+            departure_time=make_aware(datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")),
+            arrival_time=make_aware(datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))
+        )
 
     def test_flight_viewset(self):
         url = reverse("flights:flight-list")
@@ -157,7 +165,12 @@ class TicketTest(APITestCase):
         self.source = Airport.objects.create(name="Airport 1", closest_big_city="City 1")
         self.destination = Airport.objects.create(name="Airport 2", closest_big_city="City 2")
         self.route = Route.objects.create(source=self.source, destination=self.destination, distance=1000)
-        self.flight = Flight.objects.create(route=self.route, airplane=self.airplane, departure_time="2023-07-20T08:00:00Z", arrival_time="2023-07-20T10:00:00Z")
+        self.flight = Flight.objects.create(
+            route=self.route,
+            airplane=self.airplane,
+            departure_time=make_aware(datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")),
+            arrival_time=make_aware(datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))
+        )
         self.ticket = Ticket.objects.create(row=1, seat=1, flight=self.flight, order=self.order)
 
     def test_ticket_viewset(self):
