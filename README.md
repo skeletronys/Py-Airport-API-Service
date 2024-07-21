@@ -56,3 +56,24 @@ Py-Airport-API-Service is a RESTful web service for managing airports, flights, 
     ```sh
     python manage.py test
     ```
+
+### Screenshots API
+
+1. Menu API
+   ![img.png](ReadMePhotos/img2.png)
+2. Crew
+   ![img.png](ReadMePhotos/img.png)
+3. Airport
+   ![img.png](ReadMePhotos/img3.png)
+4. Airplane
+   ![img.png](ReadMePhotos/img4.png)
+5. Airplane Type
+   ![img.png](ReadMePhotos/img5.png)
+6. Order
+   ![img.png](ReadMePhotos/img6.png)
+7. Ticked
+   ![img.png](ReadMePhotos/img7.png)
+8. Flight
+   ![img.png](ReadMePhotos/img8.png)
+9. Register
+   ![img.png](ReadMePhotos/img9.png)
