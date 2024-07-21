@@ -65,7 +65,7 @@ class OrderSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         created_at = instance.created_at
         formatted_created_at = created_at.strftime("%H:%M:%S %d-%m-%Y")
-        representation['created_at'] = formatted_created_at
+        representation["created_at"] = formatted_created_at
         return representation
 
 
@@ -86,18 +86,39 @@ class FlightSerializer(serializers.ModelSerializer):
 
         route_data = instance.route
         if route_data:
-            representation['route'] = f"{route_data.source.name} - {route_data.destination.name}"
+            representation["route"] = f"{route_data.source.name} - {route_data.destination.name}"
 
         crew_data = CrewSerializer(instance.crew.all(), many=True).data
-        representation['crew'] = crew_data
+        representation["crew"] = crew_data
 
         return representation
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    flight = FlightSerializer(read_only=True)
-    order = OrderSerializer(read_only=True)
+    flight = serializers.PrimaryKeyRelatedField(queryset=Flight.objects.all(), write_only=True)
+    order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all(), write_only=True)
 
     class Meta:
         model = Ticket
-        fields = "__all__"
+        fields = ("id", "flight", "order", "row", "seat")
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        flight_data = instance.flight
+        if flight_data:
+            representation["flight"] = FlightSerializer(flight_data).data
+
+        order_data = instance.order
+        if order_data:
+            representation["order"] = OrderSerializer(order_data).data
+
+        ordered_representation = {
+            "id": representation["id"],
+            "flight": representation["flight"],
+            "order": representation["order"],
+            "row": representation["row"],
+            "seat": representation["seat"]
+        }
+
+        return ordered_representation
