@@ -107,18 +107,16 @@ class TicketSerializer(serializers.ModelSerializer):
 
         flight_data = instance.flight
         if flight_data:
-            representation["flight"] = FlightSerializer(flight_data).data
+            flight_representation = FlightSerializer(flight_data).data
+            flight_representation['departure_time'] = flight_data.departure_time.strftime("%H:%M:%S %d-%m-%Y")
+            flight_representation['arrival_time'] = flight_data.arrival_time.strftime("%H:%M:%S %d-%m-%Y")
+            representation['flight'] = flight_representation
 
         order_data = instance.order
         if order_data:
-            representation["order"] = OrderSerializer(order_data).data
+            order_representation = OrderSerializer(order_data).data
+            order_representation['created_at'] = order_data.created_at.strftime("%H:%M:%S %d-%m-%Y")
+            order_representation['user'] = order_data.user.username
+            representation['order'] = order_representation
 
-        ordered_representation = {
-            "id": representation["id"],
-            "flight": representation["flight"],
-            "order": representation["order"],
-            "row": representation["row"],
-            "seat": representation["seat"]
-        }
-
-        return ordered_representation
+        return representation
