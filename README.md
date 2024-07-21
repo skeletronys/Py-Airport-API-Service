@@ -1,67 +1,58 @@
 # Py-Airport-API-Service
 
-## Project Overview
+## Опис проекту
 
-Py-Airport-API-Service is a RESTful web service designed to manage airports, flights, tickets, and orders. It provides a robust backend infrastructure using Django and Django REST framework.
+Py-Airport-API-Service – це RESTful веб-сервіс для управління аеропортами, рейсами, квитками та замовленнями.
 
-### Technology Stack
+### Технологічний стек
 
-- **Python**: Programming language used for backend development.
-- **Django**: Web framework for building web applications in Python.
-- **Django REST framework**: Toolkit for building Web APIs in Django.
-- **SQLite**: Relational database management system used by default with Django.
+- Python
+- Django
+- Django REST framework
+- SQLite
 
-### Installation
+### Встановлення
 
-1. **Clone the repository:**
-
+1. Клонуйте репозиторій:
     ```sh
     git clone <repository_url>
+    ```
+
+2. Перейдіть в каталог проекту:
+    ```sh
     cd Py-Airport-API-Service
     ```
 
-2. **Setup Virtual Environment:**
-
+3. Створіть та активуйте віртуальне оточення:
     ```sh
     python -m venv .venv
-    .venv\Scripts\activate  # For Windows
-    source .venv/bin/activate  # For Linux/MacOS
+    .venv\Scripts\activate  # Windows
+    source .venv/bin/activate  # Linux/MacOS
     ```
 
-3. **Install Dependencies:**
-
+4. Встановіть залежності:
     ```sh
     pip install -r requirements.txt
     ```
 
-4. **Set Environment Variables:**
-
-    Create a `.env` file in the root directory with the following content:
-
+5. Створіть файл `.env` в кореневому каталозі та додайте змінну `SECRET_KEY`:
     ```env
-    SECRET_KEY=your_secret_key_here
+    SECRET_KEY=your_dummy_secret_key
     ```
 
-    Replace `your_secret_key_here` with a secure random string. You can generate one at [djecrety.ir](https://djecrety.ir).
-
-5. **Apply Migrations:**
-
+6. Застосуйте міграції:
     ```sh
     python manage.py migrate
     ```
 
-6. **Run the Development Server:**
-
+7. Запустіть сервер:
     ```sh
     python manage.py runserver
     ```
 
-    The API will be accessible at `http://localhost:8000`.
+### Інструкції з тестування
 
-### Testing
-
-To run tests, execute the following command:
-
+1. Створіть тестову базу даних та запустіть тести:
     ```sh
     python manage.py test
     ```
