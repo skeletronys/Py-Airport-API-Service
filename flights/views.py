@@ -52,7 +52,12 @@ class OrderListViewSet(viewsets.ModelViewSet):
 
 
 class TicketListViewSet(viewsets.ModelViewSet):
-    queryset = Ticket.objects.select_related('flight', 'order').all()
+    queryset = Ticket.objects.select_related(
+        'flight__route__source', 'flight__route__destination', 'flight__airplane',
+        'order__user'
+    ).prefetch_related(
+        'flight__crew'
+    ).all()
     serializer_class = TicketSerializer
 
 
