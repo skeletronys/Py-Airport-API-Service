@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from .models import (
+from flights.models import (
     Crew,
     Route,
     Airport,
@@ -13,9 +13,9 @@ from .models import (
     AirplaneType,
     Order,
     Ticket,
-    Flight
+    Flight,
 )
-from .serializers import (
+from flights.serializers import (
     CrewSerializer,
     RouteSerializer,
     AirportSerializer,
@@ -23,7 +23,7 @@ from .serializers import (
     AirplaneTypeSerializer,
     OrderSerializer,
     TicketSerializer,
-    FlightSerializer
+    FlightSerializer,
 )
 
 
@@ -46,7 +46,9 @@ class CrewTest(APITestCase):
 class AirportTest(APITestCase):
 
     def setUp(self):
-        self.airport = Airport.objects.create(name="Test Airport", closest_big_city="Test City")
+        self.airport = Airport.objects.create(
+            name="Test Airport", closest_big_city="Test City"
+        )
 
     def test_airport_viewset(self):
         url = reverse("flights:airport-list")
@@ -56,13 +58,17 @@ class AirportTest(APITestCase):
     def test_airport_serialization(self):
         serializer = AirportSerializer(self.airport)
         self.assertEqual(serializer.data["name"], self.airport.name)
-        self.assertEqual(serializer.data["closest_big_city"], self.airport.closest_big_city)
+        self.assertEqual(
+            serializer.data["closest_big_city"], self.airport.closest_big_city
+        )
 
 
 class OrderTest(APITestCase):
 
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="testuser", password="testpass")
+        self.user = get_user_model().objects.create_user(
+            username="testuser", password="testpass"
+        )
         self.order = Order.objects.create(user=self.user)
 
     def test_order_viewset(self):
@@ -93,9 +99,15 @@ class AirplaneTypeTest(APITestCase):
 class RouteTest(APITestCase):
 
     def setUp(self):
-        self.source = Airport.objects.create(name="Airport 1", closest_big_city="City 1")
-        self.destination = Airport.objects.create(name="Airport 2", closest_big_city="City 2")
-        self.route = Route.objects.create(source=self.source, destination=self.destination, distance=1000)
+        self.source = Airport.objects.create(
+            name="Airport 1", closest_big_city="City 1"
+        )
+        self.destination = Airport.objects.create(
+            name="Airport 2", closest_big_city="City 2"
+        )
+        self.route = Route.objects.create(
+            source=self.source, destination=self.destination, distance=1000
+        )
 
     def test_route_viewset(self):
         url = reverse("flights:route-list")
@@ -104,8 +116,12 @@ class RouteTest(APITestCase):
 
     def test_route_serialization(self):
         serializer = RouteSerializer(self.route)
-        self.assertEqual(serializer.data["source"], self.route.source.name)  # Очікуємо назву аеропорту
-        self.assertEqual(serializer.data["destination"], self.route.destination.name)  # Очікуємо назву аеропорту
+        self.assertEqual(
+            serializer.data["source"], self.route.source.name
+        )  # Очікуємо назву аеропорту
+        self.assertEqual(
+            serializer.data["destination"], self.route.destination.name
+        )  # Очікуємо назву аеропорту
         self.assertEqual(serializer.data["distance"], self.route.distance)
 
 
@@ -113,7 +129,9 @@ class AirplaneTest(APITestCase):
 
     def setUp(self):
         self.airplane_type = AirplaneType.objects.create(name="Type A")
-        self.airplane = Airplane.objects.create(name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type)
+        self.airplane = Airplane.objects.create(
+            name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type
+        )
 
     def test_airplane_viewset(self):
         url = reverse("flights:airplane-list")
@@ -125,23 +143,39 @@ class AirplaneTest(APITestCase):
         self.assertEqual(serializer.data["name"], self.airplane.name)
         self.assertEqual(serializer.data["rows"], self.airplane.rows)
         self.assertEqual(serializer.data["seats_in_row"], self.airplane.seats_in_row)
-        self.assertEqual(serializer.data["airplane_type"]["id"], self.airplane.airplane_type.id)
-        self.assertEqual(serializer.data["airplane_type"]["name"], self.airplane.airplane_type.name)
+        self.assertEqual(
+            serializer.data["airplane_type"]["id"], self.airplane.airplane_type.id
+        )
+        self.assertEqual(
+            serializer.data["airplane_type"]["name"], self.airplane.airplane_type.name
+        )
 
 
 class FlightTest(APITestCase):
 
     def setUp(self):
         self.airplane_type = AirplaneType.objects.create(name="Type A")
-        self.airplane = Airplane.objects.create(name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type)
-        self.source = Airport.objects.create(name="Airport 1", closest_big_city="City 1")
-        self.destination = Airport.objects.create(name="Airport 2", closest_big_city="City 2")
-        self.route = Route.objects.create(source=self.source, destination=self.destination, distance=1000)
+        self.airplane = Airplane.objects.create(
+            name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type
+        )
+        self.source = Airport.objects.create(
+            name="Airport 1", closest_big_city="City 1"
+        )
+        self.destination = Airport.objects.create(
+            name="Airport 2", closest_big_city="City 2"
+        )
+        self.route = Route.objects.create(
+            source=self.source, destination=self.destination, distance=1000
+        )
         self.flight = Flight.objects.create(
             route=self.route,
             airplane=self.airplane,
-            departure_time=make_aware(datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")),
-            arrival_time=make_aware(datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))
+            departure_time=make_aware(
+                datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+            ),
+            arrival_time=make_aware(
+                datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+            ),
         )
 
     def test_flight_viewset(self):
@@ -151,27 +185,46 @@ class FlightTest(APITestCase):
 
     def test_flight_serialization(self):
         serializer = FlightSerializer(self.flight)
-        self.assertEqual(serializer.data["route"], f"{self.route.source.name} - {self.route.destination.name}")
+        self.assertEqual(
+            serializer.data["route"],
+            f"{self.route.source.name} - {self.route.destination.name}",
+        )
         self.assertEqual(serializer.data["airplane"], self.airplane.name)
 
 
 class TicketTest(APITestCase):
 
     def setUp(self):
-        self.user = get_user_model().objects.create_user(username="testuser", password="testpass")
+        self.user = get_user_model().objects.create_user(
+            username="testuser", password="testpass"
+        )
         self.order = Order.objects.create(user=self.user)
         self.airplane_type = AirplaneType.objects.create(name="Type A")
-        self.airplane = Airplane.objects.create(name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type)
-        self.source = Airport.objects.create(name="Airport 1", closest_big_city="City 1")
-        self.destination = Airport.objects.create(name="Airport 2", closest_big_city="City 2")
-        self.route = Route.objects.create(source=self.source, destination=self.destination, distance=1000)
+        self.airplane = Airplane.objects.create(
+            name="Boeing 737", rows=20, seats_in_row=6, airplane_type=self.airplane_type
+        )
+        self.source = Airport.objects.create(
+            name="Airport 1", closest_big_city="City 1"
+        )
+        self.destination = Airport.objects.create(
+            name="Airport 2", closest_big_city="City 2"
+        )
+        self.route = Route.objects.create(
+            source=self.source, destination=self.destination, distance=1000
+        )
         self.flight = Flight.objects.create(
             route=self.route,
             airplane=self.airplane,
-            departure_time=make_aware(datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")),
-            arrival_time=make_aware(datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ"))
+            departure_time=make_aware(
+                datetime.strptime("2023-07-20T08:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+            ),
+            arrival_time=make_aware(
+                datetime.strptime("2023-07-20T10:00:00Z", "%Y-%m-%dT%H:%M:%SZ")
+            ),
         )
-        self.ticket = Ticket.objects.create(row=1, seat=1, flight=self.flight, order=self.order)
+        self.ticket = Ticket.objects.create(
+            row=1, seat=1, flight=self.flight, order=self.order
+        )
 
     def test_ticket_viewset(self):
         url = reverse("flights:ticket-list")
